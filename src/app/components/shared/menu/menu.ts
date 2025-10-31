@@ -5,6 +5,7 @@ import { Dialog } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 
+
 @Component({
   selector: 'app-menu',
   imports: [DrawerHeadlessDemo, ToolbarModule, Dialog, ButtonModule, InputTextModule],
@@ -18,5 +19,4 @@ export class Menu {
     showDialog() {
         this.visible = true;
     }
-
 }
