@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Menu } from "./components/shared/menu/menu";
+import { Menu } from './components/comp_telas/menu/menu';
 
 @Component({
   selector: 'app-root',
