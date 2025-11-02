@@ -1,22 +1,16 @@
 import { Component } from '@angular/core';
-import { DrawerHeadlessDemo } from '../headless/headless';
-import { ToolbarModule } from 'primeng/toolbar';
-import { Dialog } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
+import { RouterOutlet } from '@angular/router';
+import { Slidebar } from "../slidebar/slidebar";
+
 
 
 @Component({
   selector: 'app-menu',
-  imports: [DrawerHeadlessDemo, ToolbarModule, Dialog, ButtonModule, InputTextModule],
+  imports: [RouterOutlet, Slidebar],
   templateUrl: './menu.html',
   styleUrl: './menu.css',
 })
 export class Menu {
 
-   visible: boolean = false;
-
-    showDialog() {
-        this.visible = true;
-    }
+   
 }
