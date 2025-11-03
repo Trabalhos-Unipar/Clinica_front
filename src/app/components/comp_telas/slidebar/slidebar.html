@@ -6,27 +6,33 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="#" class="nav-link active" aria-current="page">
+        <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="nav-link text-white" aria-current="page">
           <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
           Home
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link text-white">
+        <a routerLink="/medicos" routerLinkActive="active" class="nav-link text-white">
           <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
           Médicos
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link text-white">
+        <a routerLink="/consultas" routerLinkActive="active" class="nav-link text-white">
           <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
           Consultas
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link text-white">
+        <a class="nav-link text-white">
           <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
           Cadastros
+        </a>
+      </li>
+      <li>
+        <a routerLink="/pacientes/listar" routerLinkActive="active" class="nav-link text-white">
+          <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
+          Pacientes
         </a>
       </li>
     

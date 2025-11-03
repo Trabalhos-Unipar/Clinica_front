@@ -1,0 +1,99 @@
+<form #formCadastro="ngForm" (ngSubmit)="onSubmit()">
+  <div class="row g-3">
+    <!-- Nome -->
+    <div class="col-12 md:col-6">
+      <label for="nome" class="form-label">Nome</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-person"></i></span>
+        <input
+          type="text"
+          class="form-control"
+          id="nome"
+          name="nome"
+          placeholder="Nome completo"
+          [(ngModel)]="nome"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- CPF -->
+    <div class="col-12 md:col-6">
+      <label for="cpf" class="form-label">CPF</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+        <input
+          type="text"
+          class="form-control"
+          id="cpf"
+          name="cpf"
+          placeholder="000.000.000-00"
+          [(ngModel)]="cpf"
+          mask="000.000.000-00"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- Data de nascimento -->
+    <div class="col-12 md:col-6">
+      <label for="dataNascimento" class="form-label">Data de Nascimento</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+        <input
+          type="date"
+          class="form-control"
+          id="dataNascimento"
+          name="dataNascimento"
+          [(ngModel)]="dataNascimento"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="col-12 md:col-6">
+      <label for="email" class="form-label">Email</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          placeholder="exemplo@email.com"
+          [(ngModel)]="email"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- Telefone -->
+    <div class="col-12 md:col-6">
+      <label for="telefone" class="form-label">Telefone</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+        <input
+          type="text"
+          class="form-control"
+          id="telefone"
+          name="telefone"
+          placeholder="(00) 00000-0000"
+          [(ngModel)]="telefone"
+          mask="(00) 00000-0000"
+          required
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="d-grid mt-4">
+    <button
+      type="submit"
+      class="btn btn-success"
+      [disabled]="!formCadastro.valid"
+    >
+      {{ id ? 'Salvar Alterações' : 'Cadastrar Paciente' }}
+    </button>
+  </div>
+</form>

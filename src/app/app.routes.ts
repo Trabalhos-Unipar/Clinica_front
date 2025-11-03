@@ -3,6 +3,7 @@ import { Home } from './telas/home/home';
 import { Consultas } from './telas/consultas/consultas';
 //import { Paciente } from './telas/cadastros/paciente/paciente';
 import { Medico } from './telas/cadastros/medico/medico';
+import { PacienteListar } from './telas/cadastros/paciente/paciente-listar/paciente-listar';
 
 export const routes: Routes = [
     {
@@ -13,10 +14,11 @@ export const routes: Routes = [
     path: 'consultas',
    component:Consultas,
     },
-   // {
-    //path: 'pacientes',
-   //component:Paciente,
-    //},
+   {
+    path: 'pacientes',
+    loadChildren:()=>
+        import('./telas/cadastros/paciente/paciente-route').then((m=>m.PACIENTE_ROUTES))  ,
+    },
     {
     path: 'medicos',
    component:Medico,
