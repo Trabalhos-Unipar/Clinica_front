@@ -1,22 +1,26 @@
 @import "tailwindcss";
 
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-/* Remove margem padrão do navegador */
+/* Reset global */
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
   width: 100%;
-  overflow: hidden; /* remove scroll horizontal e vertical */
+  min-height: 100vh;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-/* Centraliza o app */
+/* Configuração root da aplicação */
 app-root {
   display: flex;
-  height: 100vh; /* ocupa toda a tela */
-  width: 100vw;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  background-color: aliceblue;
+}
+
+/* Garantir que todos os elementos respeitem o box model */
+*, *::before, *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }

@@ -30,6 +30,6 @@ export class PacienteService {
   }
 
   deletePaciente(id: string) {
-    return this.httpPaciente.delete(`${this.urlPaciente}/deletarPaciente/${id}`);
+    return this.httpPaciente.delete(`${this.urlPaciente}/deletar-paciente/${id}`);
   }
 }
