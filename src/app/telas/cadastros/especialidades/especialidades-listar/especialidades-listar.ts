@@ -1,7 +1,8 @@
+
+
 import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
-import { PacienteService } from '../paciente-service';
+import { EspecialidadeService } from '../especialidades-service';
 import { CommonModule } from '@angular/common';
-import { PacienteCadastrar } from '../paciente-cadastrar/paciente-cadastrar';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -9,30 +10,29 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { EspecialidadesCadastrar } from '../especialidades-cadastrar/especialidades-cadastrar';
+import { Especialidade } from '../model/model';
 
 @Component({
-  selector: 'app-paciente-listar',
-  standalone: true,
-  imports: [
-    CommonModule,
-    PacienteCadastrar,
+  selector: 'app-especialidades-listar',
+  imports: [CommonModule,
+    EspecialidadesCadastrar,
     TableModule,
     ButtonModule,
     CardModule,
     ToastModule,
-    ConfirmDialogModule
-  ],
-  providers: [MessageService, ConfirmationService],
-  templateUrl: './paciente-listar.html',
-  styleUrls: ['./paciente-listar.css'],
+    ConfirmDialogModule],
+    providers: [MessageService, ConfirmationService],
+  templateUrl: './especialidades-listar.html',
+  styleUrl: './especialidades-listar.css',
 })
-export class PacienteListar {
+export class EspecialidadesListar {
 
-   pacientes:any[] = [];
+   especialidades:any[] = [];
    showCadastrarModal: boolean = false;
-   selectedPaciente: any = null;
+   selectedEspecialidade: any = null;
 
-  // UI state for search/pagination
+   // UI state for search/pagination
   searchTerm: string = '';
   page: number = 1;
   pageSize: number = 10;
@@ -52,18 +52,18 @@ export class PacienteListar {
   fecharModalEdicao(): void {
     this.modalEditarAberto = false;
     this.dependenteSelecionado = null; 
-    this.carregarPacientes();
+    this.carregarEspecialidades();
   }
 
   constructor(
-    private readonly pacienteService: PacienteService,
+    private readonly especialidadeService: EspecialidadeService,
     private readonly detectorMudanca: ChangeDetectorRef,
     private readonly messageService: MessageService,
     private readonly confirmationService: ConfirmationService
   ) {}
 
   ngOnInit():void{
-    this.carregarPacientes();
+    this.carregarEspecialidades();
     // attempt to detect sidebar width and set CSS variable so the pacient list centers correctly
     try {
       const sidebarEl = document.querySelector('app-slidebar') as HTMLElement | null;
@@ -75,10 +75,18 @@ export class PacienteListar {
     }
   }
 
-  carregarPacientes(): void {
-    this.pacienteService.listarPacientes().subscribe({
+  carregarEspecialidades(): void {
+    this.especialidadeService.listarEspecialidades().subscribe({
       next: (response) => {
-        this.pacientes = response;
+        // Log the raw response to help debug missing fields
+        console.debug('Resposta listarEspecialidades:', response);
+
+        // Normalize items so the template can always use `item.nome` even if backend returns a different field
+        this.especialidades = (response || []).map((item: any) => ({
+          ...item,
+          nome: item.nome ?? item.descricao ?? item.nomeEspecialidade ?? item.name ?? ''
+        }));
+
         this.detectorMudanca.detectChanges();
       },
       error: (error) => {
@@ -98,72 +106,38 @@ export class PacienteListar {
     this.page = 1;
   }
 
-  // Filter + pagination helpers
-  filtered(): any[] {
-    if (!this.searchTerm) return this.pacientes || [];
-    return (this.pacientes || []).filter(p => {
-      const s = this.searchTerm;
-      return (p.nome || '').toString().toLowerCase().includes(s)
-        || (p.email || '').toString().toLowerCase().includes(s)
-        || (p.cpf || '').toString().toLowerCase().includes(s);
-    });
-  }
+  
 
-  filteredCount(): number {
-    return this.filtered().length;
-  }
-
-  startIndex(): number {
-    return (this.page - 1) * this.pageSize;
-  }
-
-  endIndex(): number {
-    return this.page * this.pageSize;
-  }
-
-  pagedPacientes(): any[] {
-    const f = this.filtered();
-    return f.slice(this.startIndex(), this.endIndex());
-  }
-
-  prevPage() {
-    if (this.page > 1) this.page--;
-  }
-
-  nextPage() {
-    if (this.endIndex() < this.filteredCount()) this.page++;
-  }
-
-  deletePaciente(paciente: any) {
-    if (!paciente || !paciente.id) {
+  deleteEspecialidade(especialidade: any) {
+    if (!especialidade || !especialidade.id) {
       this.messageService.add({ 
         severity: 'error', 
         summary: 'Erro', 
-        detail: 'Paciente inválido' 
+        detail: 'Especialidade inválido' 
       });
       return;
     }
 
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja remover o paciente ${paciente.nome}?`,
+      message: `Tem certeza que deseja remover o paciente ${especialidade.nome}?`,
       header: 'Confirmar Remoção',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sim',
       rejectLabel: 'Não',
       accept: () => {
-        this.pacienteService.deletePaciente(paciente.id).subscribe({
+        this.especialidadeService.deleteEspecialidade(especialidade.id).subscribe({
           next: () => {
             this.messageService.add({ 
               severity: 'success', 
               summary: 'Sucesso', 
-              detail: `Paciente ${paciente.nome} removido com sucesso!`,
+              detail: `Especialidade ${especialidade.nome} removido com sucesso!`,
               life: 3000
             });
-            this.carregarPacientes();
+            this.carregarEspecialidades();
           },
           error: (erro) => {
             console.error('Erro ao deletar:', erro);
-            console.log('URL da requisição:', `${this.pacienteService.urlPaciente}/excluir/${paciente.id}`);
+            console.log('URL da requisição:', `${this.especialidadeService.urlEspecialidade}/excluir/${especialidade.id}`);
             console.log('Status do erro:', erro.status);
             console.log('Mensagem do erro:', erro.error);
             
@@ -196,16 +170,14 @@ export class PacienteListar {
   }
 
   openCadastrar(paciente?: any) {
-    this.selectedPaciente = paciente ?? null;
+    this.selectedEspecialidade = paciente ?? null;
     this.showCadastrarModal = true;
   }
 
   closeCadastrarModal() {
     this.showCadastrarModal = false;
-    this.selectedPaciente = null;
-    this.carregarPacientes();
+    this.selectedEspecialidade = null;
+    this.carregarEspecialidades();
     };
 
-    
 }
-

@@ -38,6 +38,8 @@ export class PacienteCadastrar implements OnInit{
     email!: string;
     telefone!: string;
 
+    
+
   constructor(
     private readonly pacienteService: PacienteService,
     private router: Router
@@ -47,7 +49,7 @@ export class PacienteCadastrar implements OnInit{
     if(this.dependenteEdicao) {
         this.id = this.dependenteEdicao.id;
         this.nome = this.dependenteEdicao.nome;
-        this.dataNascimento = this.dependenteEdicao.data_nascimento;
+        this.dataNascimento = this.dependenteEdicao.dataNascimento;
         this.cpf = this.dependenteEdicao.cpf;
         this.email = this.dependenteEdicao.email;
         this.telefone = this.dependenteEdicao.telefone;

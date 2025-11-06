@@ -14,10 +14,10 @@ export class PacienteService {
      return this.httpPaciente.get<any[]>(`${this.urlPaciente}/listar`);
   }
 
-  salvarPaciente(cliente: any) {
+  salvarPaciente(paciente: any) {
     return this.httpPaciente.post<any>(
       `${this.urlPaciente}/salvar-paciente`,
-      cliente
+      paciente
     )
   }
 
@@ -25,8 +25,8 @@ export class PacienteService {
     return this.httpPaciente.get<any>(`${this.urlPaciente}/buscarPaciente/${id}`);
   }
 
-  atualizarPaciente(cliente: any) {
-    return this.httpPaciente.put<any>(`${this.urlPaciente}/atualizarPaciente/${cliente.id}`, cliente);
+  atualizarPaciente(paciente: any) {
+    return this.httpPaciente.put<any>(`${this.urlPaciente}/atualizarPaciente/${paciente.id}`, paciente);
   }
 
   deletePaciente(id: string) {
