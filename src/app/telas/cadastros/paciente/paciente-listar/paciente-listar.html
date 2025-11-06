@@ -67,7 +67,7 @@
   </div> </div> <div *ngIf="showCadastrarModal" style="position: fixed; inset:0; background: rgba(0,0,0,0.5); z-index: 1050; display:flex; align-items:center; justify-content:center;">
     <div class="modal-dialog" style="max-width: 800px; width:100%;">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header" style="background-color: deepskyblue;">
           <h5 class="modal-title">{{ selectedPaciente ? 'Editar Paciente' : 'Cadastrar Paciente' }}</h5>
           <button type="button" class="btn-close" aria-label="Close" (click)="closeCadastrarModal()"><i class="fa-solid fa-xmark"></i></button>
         </div>

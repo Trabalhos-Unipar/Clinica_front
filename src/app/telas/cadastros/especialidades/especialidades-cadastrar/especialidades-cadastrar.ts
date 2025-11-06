@@ -27,12 +27,12 @@ export class EspecialidadesCadastrar implements OnInit {
   ngOnInit(): void {
     if (this.especialidade) {
       this.id = this.especialidade.id;
-      this.nome = this.especialidade.nome;
+      this.especialidade = this.especialidade.especialidade;
     }
   }
 
   onSubmit(): void {
-    const dadosEnvio = { id: this.id, nome: this.nome };
+    const dadosEnvio = { id: this.id, especialidade: this.especialidade };
 
     if (this.id) {
       this.especialidadeService.atualizarEspecialidade(dadosEnvio).subscribe({

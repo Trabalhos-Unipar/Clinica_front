@@ -78,19 +78,11 @@ export class EspecialidadesListar {
   carregarEspecialidades(): void {
     this.especialidadeService.listarEspecialidades().subscribe({
       next: (response) => {
-        // Log the raw response to help debug missing fields
-        console.debug('Resposta listarEspecialidades:', response);
-
-        // Normalize items so the template can always use `item.nome` even if backend returns a different field
-        this.especialidades = (response || []).map((item: any) => ({
-          ...item,
-          nome: item.nome ?? item.descricao ?? item.nomeEspecialidade ?? item.name ?? ''
-        }));
-
+        this.especialidades = response;
         this.detectorMudanca.detectChanges();
       },
       error: (error) => {
-        console.error('Erro ao carregar pacientes:', error);
+        console.error('Erro ao carregar especialidades:', error);
       }
     });
 }

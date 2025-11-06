@@ -1,1 +1,30 @@
-<p>especialidades-cadastrar works!</p>
+<form #formCadastro="ngForm" (ngSubmit)="onSubmit()">
+  <div class="row g-3 ">
+      <div class="col-12 md:col-6">
+        <label for="especialidade" class="form-label">Especialidade</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="bi bi-person"></i></span>
+          <input
+            type="text"
+            class="form-control"
+            id="especialidade"
+            name="especialidade"
+            placeholder="Nome da especialidade"
+            [(ngModel)]="especialidade"
+            required
+          />
+        </div>
+      </div>
+    
+  <div class="d-grid mt-4">
+    <button
+      type="submit"
+      class="btn btn-success"
+      [disabled]="!formCadastro.valid"
+    >
+      {{ id ? 'Salvar Alterações' : 'Cadastrar Especialidade' }}
+    </button>
+    
+  </div>
+  </div>
+</form>

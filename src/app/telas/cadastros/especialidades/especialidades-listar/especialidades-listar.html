@@ -39,7 +39,7 @@
             <tbody>
               <tr *ngFor="let especialidade of especialidades">
                 <td>{{ especialidade.id }}</td>
-                <td>{{ especialidade.nome }}</td>
+                <td>{{ especialidade.especialidade }}</td>
                 <td class="text-center d-flex justify-content-around">
                   <button class="btn btn-sm btn-danger me-1" (click)="deleteEspecialidade(especialidade)" >
                     <i class="fa-solid fa-trash"></i>
