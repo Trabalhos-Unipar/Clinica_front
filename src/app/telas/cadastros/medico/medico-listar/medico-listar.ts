@@ -64,6 +64,7 @@ export class MedicoListar {
     this.showCadastrarModal = false;
     this.selectedMedico = null;
     this.carregarMedicos();
+    
     };
 }
 
