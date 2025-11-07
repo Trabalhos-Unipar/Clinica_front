@@ -87,52 +87,7 @@ export class PacienteListar {
     });
 }
 
-  // search input handler
-  onSearch(value: string) {
-    this.searchTerm = (value || '').toLowerCase().trim();
-    this.page = 1;
-  }
 
-  setPageSize(size: number | string) {
-    this.pageSize = Number(size) || 10;
-    this.page = 1;
-  }
-
-  // Filter + pagination helpers
-  filtered(): any[] {
-    if (!this.searchTerm) return this.pacientes || [];
-    return (this.pacientes || []).filter(p => {
-      const s = this.searchTerm;
-      return (p.nome || '').toString().toLowerCase().includes(s)
-        || (p.email || '').toString().toLowerCase().includes(s)
-        || (p.cpf || '').toString().toLowerCase().includes(s);
-    });
-  }
-
-  filteredCount(): number {
-    return this.filtered().length;
-  }
-
-  startIndex(): number {
-    return (this.page - 1) * this.pageSize;
-  }
-
-  endIndex(): number {
-    return this.page * this.pageSize;
-  }
-
-  pagedPacientes(): any[] {
-    const f = this.filtered();
-    return f.slice(this.startIndex(), this.endIndex());
-  }
-
-  prevPage() {
-    if (this.page > 1) this.page--;
-  }
-
-  nextPage() {
-    if (this.endIndex() < this.filteredCount()) this.page++;
-  }
 
   deletePaciente(paciente: any) {
     if (!paciente || !paciente.id) {

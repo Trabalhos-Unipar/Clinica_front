@@ -17,7 +17,7 @@ export class EspecialidadesCadastrar implements OnInit {
   @Output() fecharModal = new EventEmitter<void>();
 
   id!: string;
-  nome!: string;
+  especelidade!: string;
 
   constructor(
     private readonly especialidadeService: EspecialidadeService,

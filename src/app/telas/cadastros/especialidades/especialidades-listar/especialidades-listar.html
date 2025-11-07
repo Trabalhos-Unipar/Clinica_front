@@ -13,7 +13,7 @@
 
 
 
-<div class="paciente-fullwidth">
+<div class="container mt-4">
 
   <div class="p-4">
 
@@ -41,10 +41,10 @@
                 <td>{{ especialidade.id }}</td>
                 <td>{{ especialidade.especialidade }}</td>
                 <td class="text-center d-flex justify-content-around">
-                  <button class="btn btn-sm btn-danger me-1" (click)="deleteEspecialidade(especialidade)" >
+                  <button class="btn btn-sm btn-danger me-1"  style="" (click)="deleteEspecialidade(especialidade)" >
                     <i class="fa-solid fa-trash"></i>
                   </button>
-                  <button class="btn btn-sm btn-info text-white" (click)="openCadastrar(especialidade)">
+                  <button  class="btn btn-sm btn-info text-white"   (click)="openCadastrar(especialidade)">
                     <i class="fa-solid fa-pencil"></i>
                   </button>
                 </td>
