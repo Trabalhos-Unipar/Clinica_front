@@ -1,11 +1,6 @@
 import { Routes } from '@angular/router';
 import { Home } from './telas/home/home';
 import { Consultas } from './telas/consultas/consultas';
-//import { Paciente } from './telas/cadastros/paciente/paciente';
-import { Medico } from './telas/cadastros/medico/medico';
-import { PacienteListar } from './telas/cadastros/paciente/paciente-listar/paciente-listar';
-import { EspecialidadesListar } from './telas/cadastros/especialidades/especialidades-listar/especialidades-listar';
-
 export const routes: Routes = [
     {
     path: 'home',
@@ -22,7 +17,8 @@ export const routes: Routes = [
     },
     {
     path: 'medicos',
-   component:Medico,
+    loadChildren:()=>
+        import('./telas/cadastros/medico/medico-route').then((m=>m.MEDICO_ROUTES))  ,
     },
     {
     path: 'especialidades',
