@@ -1,0 +1,71 @@
+<form #formCadastro="ngForm" (ngSubmit)="onSubmit()">
+  <div class="row g-3 ">
+    <!-- Nome -->
+    <div class="col-12 md:col-6">
+      <label for="status" class="form-label">status</label>
+      <div class="card flex justify-center">
+    <p-multiselect [options]="cities" [(ngModel)]="selectedCities" placeholder="Select Cities" optionLabel="name" display="chip" class="w-full md:w-80" />
+</div>
+    </div>
+
+    <!-- CPF -->
+    <div class="col-12 md:col-6">
+      <label for="horarioAtendimento" class="form-label">horarioAtendimento</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+        <input
+          type="text"
+          class="form-control"
+          id="horarioAtendimento"
+          name="horarioAtendimento"
+          [(ngModel)]="horarioAtendimento"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- paciente -->
+    <div class="col-12 md:col-6">
+      <label for="paciente" class="form-label">paciente</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-person"></i></span>
+        <input
+          type="text"
+          class="form-control"
+          id="paciente"
+          name="paciente"
+          [(ngModel)]="paciente"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- medico -->
+    <div class="col-12 md:col-6">
+      <label for="medico" class="form-label">medico</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+        <input
+          type="medico"
+          class="form-control"
+          id="medico"
+          name="medico"
+          placeholder="medico"
+          [(ngModel)]="medico"
+          required
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="d-grid mt-4">
+    <button
+      type="submit"
+      class="btn btn-success "
+      [disabled]="!formCadastro.valid"
+    >
+      {{ id ? 'Salvar Alterações' : 'Cadastrar Paciente' }}
+    </button>
+    
+  </div>
+</form>
