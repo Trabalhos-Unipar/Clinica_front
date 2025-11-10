@@ -83,16 +83,15 @@ export class MedicoListar {
     
     };
 
-    deleteMedico(medico: any) {
+  deleteMedico(medico: any) {
     if (!medico || !medico.id) {
       this.messageService.add({ 
         severity: 'error', 
         summary: 'Erro', 
-        detail: 'Medico inválido' 
+        detail: 'Paciente inválido' 
       });
       return;
     }
-    
 
     this.confirmationService.confirm({
       message: `Tem certeza que deseja remover o medico ${medico.nome}?`,
@@ -106,14 +105,14 @@ export class MedicoListar {
             this.messageService.add({ 
               severity: 'success', 
               summary: 'Sucesso', 
-              detail: `Medico ${medico.nome} removido com sucesso!`,
+              detail: `Paciente ${medico.nome} removido com sucesso!`,
               life: 3000
             });
             this.carregarMedicos();
           },
           error: (erro) => {
             console.error('Erro ao deletar:', erro);
-            console.log('URL da requisição:', `${this.medicoService.urlMedico}/excluir/${medico.id}`);
+            console.log('URL da requisição:', `${this.medicoService.urlMedico}/deletar-medico/${medico.id}`);
             console.log('Status do erro:', erro.status);
             console.log('Mensagem do erro:', erro.error);
             
@@ -138,6 +137,9 @@ export class MedicoListar {
       }
     });
   }
+    }
+    
 
-}
+
+
 

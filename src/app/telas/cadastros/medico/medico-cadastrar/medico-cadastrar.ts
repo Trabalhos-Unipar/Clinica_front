@@ -1,15 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Card } from "primeng/card";
-import { FloatLabel } from 'primeng/floatlabel';
-import { InputMask } from 'primeng/inputmask';
-import { InputText } from 'primeng/inputtext';
-import { ButtonDirective } from "primeng/button";
-import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
-import { Router, RouterLink } from '@angular/router';
-import { SelectModule } from 'primeng/select';
-import { AutoComplete, AutoCompleteModule } from 'primeng/autocomplete';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MedicoService } from '../medico-service';
 
@@ -19,24 +10,30 @@ import { MedicoService } from '../medico-service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ToastModule,
-    SelectModule,
-    FormsModule,
-    AutoCompleteModule
-],
+    FormsModule
+  ],
   templateUrl: './medico-cadastrar.html',
   styleUrls: ['./medico-cadastrar.css']
 })
 export class MedicoCadastrar implements OnInit{
 
-    @Input() dependenteEdicao: any;
-    @Output() fecharModal = new EventEmitter<void>();
-    id!: string;
-    nome!: string;
-    especialidade!: string;
-    crm!: string;
-    email!: string;
-    telefone!: string;
+  @Input() dependenteEdicao: any;
+  @Output() fecharModal = new EventEmitter<void>();
+
+  // ESTE OBJETO SERÁ A ÚNICA FONTE DA VERDADE
+  medico: any = {
+    id: null, // Importante ter o ID aqui
+    nome: '',
+    crm: '',
+    especialidade: null, // Iniciar como null para o placeholder do select
+    email: '',
+    telefone: '',
+    horarios: [] // lista dinâmica de horários
+  };
+
+  // Variáveis de controle (não são dados do médico)
+  listaEspecialidades: any[] = [];
+  diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
   constructor(
     private readonly medicoService: MedicoService,
@@ -45,34 +42,79 @@ export class MedicoCadastrar implements OnInit{
 
   ngOnInit(): void {
     if(this.dependenteEdicao) {
-        this.id = this.dependenteEdicao.id;
-        this.nome = this.dependenteEdicao.nome;
-        this.especialidade = this.dependenteEdicao.especialidade;
-        this.crm = this.dependenteEdicao.crm;
-        this.email = this.dependenteEdicao.email;
-        this.telefone = this.dependenteEdicao.telefone;
+      // PREENCHE O OBJETO 'medico' SE FOR UMA EDIÇÃO
+      // Usamos '...this.medico' para garantir que todas as chaves existam
+      this.medico = { ...this.medico, ...this.dependenteEdicao };
+
+      // Garante que 'horarios' seja uma lista se vier como null
+      if (!this.medico.horarios) {
+        this.medico.horarios = [];
+      }
     }
+    
+    this.carregarEspecialidades();
   }
 
-  onSubmit(): void {
-    const dadosEnvio = {
-      id: this.id,
-      nome: this.nome,
-      especialidade: this.especialidade,
-      crm: this.crm,
-      telefone: this.telefone,
-      email: this.email
-    };
+  carregarEspecialidades(): void {
+    this.medicoService.listarEspecialidades().subscribe({
+        next: (especialidades) => {
+            this.listaEspecialidades = especialidades;
+            console.log('Especialidades carregadas:', this.listaEspecialidades);
+        },
+        error: (err) => {
+            console.error('Erro ao carregar especialidades:', err);
+            alert('Não foi possível carregar a lista de especialidades.');
+        }
+    });
+  }
 
-    if (this.id) {
+  adicionarHorario(): void {
+    this.medico.horarios.push({
+      diaSemana: '',
+      horaInicio: '',
+      horaFim: '',
+      marcado: false
+    });
+  }
+
+  removerHorario(index: number): void {
+    this.medico.horarios.splice(index, 1);
+  }
+
+  
+  onSubmit(): void {
+    // AGORA O 'dadosEnvio' É O PRÓPRIO 'this.medico'
+    const dadosEnvio = this.medico;
+
+    // --- INÍCIO DA NOVA VALIDAÇÃO ---
+    // Vamos verificar cada horário antes de enviar
+    for (const horario of dadosEnvio.horarios) {
+      if (!horario.horaInicio || !horario.horaFim) {
+        // Se algum campo de hora estiver vazio
+        alert(`Por favor, preencha a hora de início e fim para o horário de ${horario.diaSemana || 'um dos dias'}.`);
+        return; // Para (Stop) a submissão
+      }
+      
+      if (horario.horaFim <= horario.horaInicio) {
+        // Se a hora de Fim for menor ou igual à de Início
+        // (Ex: Inicio 07:00, Fim 06:00)
+        alert(`Erro no horário de ${horario.diaSemana}: A hora de fim (${horario.horaFim}) deve ser *depois* da hora de início (${horario.horaInicio}).`);
+        return; // Para (Stop) a submissão
+      }
+    }
+    // --- FIM DA NOVA VALIDAÇÃO ---
+
+
+    // O service 'atualizarMedico' espera o ID no objeto, o que já está correto
+    if (dadosEnvio.id) {
       this.medicoService.atualizarMedico(dadosEnvio).subscribe({
         next: (response) => {
-          alert('Dependente atualizado com sucesso!');
+          alert('Médico atualizado com sucesso!');
           this.fecharModal.emit();
         },
         error: (error) => {
           console.error('Erro ao atualizar', error);
-          alert('Erro ao atualizar dependente.');
+          alert('Erro ao atualizar médico.');
         }
       });
     } else {
@@ -81,8 +123,7 @@ export class MedicoCadastrar implements OnInit{
           console.log('Cadastro realizado com sucesso!', response);
           alert('Cadastro realizado com sucesso!');
           this.fecharModal.emit();
-          // Only navigate if this component is not being used inside a modal (no listeners)
-          if (!this.fecharModal || !this.fecharModal.observers || this.fecharModal.observers.length === 0) {
+          if (!this.fecharModal.observers || this.fecharModal.observers.length === 0) {
             this.router.navigate(['/medicos/listar']);
           }
         },
@@ -93,5 +134,4 @@ export class MedicoCadastrar implements OnInit{
       });
     }
   }
-
 }

@@ -1,99 +1,193 @@
 <form #formCadastro="ngForm" (ngSubmit)="onSubmit()">
-    <div class="row g-3">
-      <!-- Nome -->
-      <div class="col-12 md:col-6">
-        <label for="nome" class="form-label">Nome</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-person"></i></span>
-          <input
-            type="text"
-            class="form-control"
-            id="nome"
-            name="nome"
-            placeholder="Nome completo"
-            [(ngModel)]="nome"
-            required
-          />
-        </div>
-      </div>
-  
-      <!-- CRM -->
-    <div class="col-12 md:col-6">
-        <label for="crm" class="form-label">CRM</label>
-    <div class="input-group">
-         <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
-         <input
-        type="text"
-        class="form-control"
-        id="crm"
-        name="crm"
-        placeholder="Ex: CRM 123456"
-        [(ngModel)]="crm"
-        required
-    />
-         </div>
-        </div>
-  
-      <!-- Especialidade -->
-      <div class="col-12 md:col-6">
-        <label for="especialidade" class="form-label">Especialidade</label>
-        <div class="input-group">
-          <span class="input-group-text"></span>
-          <input
-            type="text"
-            class="form-control"
-            id="especialidade"
-            name="especialidade"
-            [(ngModel)]="especialidade"
-            required
-          />
-        </div>
-      </div>
-  
-      <!-- Email -->
-      <div class="col-12 md:col-6">
-        <label for="email" class="form-label">Email</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            name="email"
-            placeholder="exemplo@email.com"
-            [(ngModel)]="email"
-            required
-          />
-        </div>
-      </div>
-  
-      <!-- Telefone -->
-      <div class="col-12 md:col-6">
-        <label for="telefone" class="form-label">Telefone</label>
-        <div class="input-group">
-          <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-          <input
-            type="text"
-            class="form-control"
-            id="telefone"
-            name="telefone"
-            placeholder="(00) 00000-0000"
-            [(ngModel)]="telefone"
-            mask="(00) 00000-0000"
-            required
-          />
-        </div>
+  <div class="row g-3">
+    <!-- Nome -->
+    <div class="col-12 col-md-6">
+      <label for="nome" class="form-label">Nome</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-person"></i></span>
+        <!-- MUDANÇA: [(ngModel)]="medico.nome" -->
+        <input
+          type="text"
+          class="form-control"
+          id="nome"
+          name="nome"
+          placeholder="Nome completo"
+          [(ngModel)]="medico.nome" 
+          required
+        />
       </div>
     </div>
-  
-    <div class="d-grid mt-4">
-      <button
-        type="submit"
-        class="btn btn-success"
-        [disabled]="!formCadastro.valid"
-      >
-        {{ id ? 'Salvar Alterações' : 'Cadastrar Medico' }}
-      </button>
+
+    <!-- CRM -->
+    <div class="col-12 col-md-6">
+      <label for="crm" class="form-label">CRM</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+         <!-- MUDANÇA: [(ngModel)]="medico.crm" -->
+        <input
+          type="text"
+          class="form-control"
+          id="crm"
+          name="crm"
+          placeholder="Ex: CRM 123456"
+          [(ngModel)]="medico.crm"
+          required
+        />
+      </div>
     </div>
-  </form>
-  
+
+    <!-- Especialidade -->
+    <div class="col-12 col-md-6">
+      <label for="especialidade" class="form-label">Especialidade</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-heart-pulse"></i></span>
+        <!-- MUDANÇA: [(ngModel)]="medico.especialidade" -->
+        <select
+          id="especialidade"
+          name="especialidade"
+          class="form-select"
+          [(ngModel)]="medico.especialidade"
+          required
+        >
+          <!-- MUDANÇA: [ngValue]="null" para funcionar com a inicialização -->
+          <option [ngValue]="null" disabled>Selecione uma especialidade</option>
+          <option
+            *ngFor="let e of listaEspecialidades"
+            [ngValue]="e.especialidade" 
+          >
+            {{ e.especialidade }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="col-12 col-md-6">
+      <label for="email" class="form-label">Email</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+         <!-- MUDANÇA: [(ngModel)]="medico.email" -->
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          placeholder="exemplo@email.com"
+          [(ngModel)]="medico.email"
+          required
+        />
+      </div>
+    </div>
+
+    <!-- Telefone -->
+    <div class="col-12 col-md-6">
+      <label for="telefone" class="form-label">Telefone</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+         <!-- MUDANÇA: [(ngModel)]="medico.telefone" -->
+        <input
+          type="text"
+          class="form-control"
+          id="telefone"
+          name="telefone"
+          placeholder="(00) 00000-0000"
+          [(ngModel)]="medico.telefone"
+          required
+        />
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-4" />
+
+  <!-- Adicionar Horários (Esta parte já estava correta) -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Horários de Atendimento</h5>
+    <button
+      type="button"
+      class="btn btn-outline-primary btn-sm"
+      (click)="adicionarHorario()"
+    >
+      <i class="bi bi-plus-lg me-1"></i> Adicionar Horário
+    </button>
+  </div>
+
+  <!-- Lista de Horários (Esta parte já estava correta) -->
+  <div *ngIf="medico.horarios && medico.horarios.length > 0; else semHorarios">
+    <div
+      *ngFor="let horario of medico.horarios; let i = index"
+      class="row g-3 align-items-end mb-3 p-2 border rounded"
+    >
+      <!-- ... (Campos de horário já usavam 'horario.diaSemana', etc. Está correto) ... -->
+      
+        <!-- Dia da Semana -->
+      <div class="col-md-4">
+        <label class="form-label">Dia da Semana</label>
+        <select
+          class="form-select"
+          [(ngModel)]="horario.diaSemana"
+          name="diaSemana{{ i }}"
+          required
+        >
+          <option value="">Selecione...</option>
+          <option *ngFor="let dia of diasSemana" [value]="dia">
+            {{ dia }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Hora de Início -->
+      <div class="col-md-3">
+        <label class="form-label">Início</label>
+        <input
+          type="time"
+          class="form-control"
+          [(ngModel)]="horario.horaInicio"
+          name="horaInicio{{ i }}"
+          required
+        />
+      </div>
+
+      <!-- Hora de Fim -->
+      <div class="col-md-3">
+        <label class="form-label">Fim</label>
+        <input
+          type="time"
+          class="form-control"
+          [(ngModel)]="horario.horaFim"
+          name="horaFim{{ i }}"
+          required
+        />
+      </div>
+
+      <!-- Botão Remover -->
+      <div class="col-md-2 text-end">
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-sm"
+          (click)="removerHorario(i)"
+        >
+          <i class="bi bi-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #semHorarios>
+    <p class="text-muted">Nenhum horário adicionado.</p>
+  </ng-template>
+
+  <hr class="my-4" />
+
+  <!-- Botão de Cadastro -->
+  <div class="d-flex justify-content-end">
+    <button
+      type="submit"
+      class="btn btn-success px-4"
+      [disabled]="!formCadastro.valid"
+    >
+      <!-- MUDANÇA: Use medico.id para verificar se é edição -->
+      {{ medico.id ? 'Salvar Alterações' : 'Cadastrar Médico' }}
+    </button>
+  </div>
+</form>

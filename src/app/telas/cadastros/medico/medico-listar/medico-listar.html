@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
 <div class="d-flex flex justify-content-between align-items-center mb-3" style="background-color: white;">
     <nav class="navbar bg-body-tertiary">
   <div class="container-fluid">
@@ -43,10 +45,22 @@
             <tr *ngFor="let medico of medicos">
               <td>{{ medico.id }}</td>
               <td>{{ medico.nome }}</td>
+              <td>{{ medico.email }}</td>
               <td>{{ medico.crm }}</td>
-              <td>{{ medico.especialidade }}</td>
               <td>{{ medico.telefone }}</td>
-              <td>{{ medico.dataNascimento }}</td>
+              <td>{{ medico.especialidade }}</td>
+                  <td>
+      <div *ngIf="medico.horarios?.length > 0; else semHorarios">
+        <ul class="mb-0 ps-3">
+          <li *ngFor="let h of medico.horarios">
+            {{ h.diaSemana }}: {{ h.horaInicio }} - {{ h.horaFim }}
+          </li>
+        </ul>
+      </div>
+      <ng-template #semHorarios>
+        <span class="text-muted">Nenhum horário</span>
+      </ng-template>
+    </td>
               <td class="text-center d-flex justify-content-around">
                 <button class="btn btn-sm btn-danger me-1" (click)="deleteMedico(medico)" >
                     <i class="fa-solid fa-trash"></i>
@@ -77,4 +91,5 @@
       </div>
     </div>
   </div>
+
   
