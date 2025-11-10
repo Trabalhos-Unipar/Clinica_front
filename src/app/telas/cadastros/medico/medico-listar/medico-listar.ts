@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Medico } from '../model/model';
 
 
 
@@ -82,7 +83,7 @@ export class MedicoListar {
     
     };
 
-      deleteMedico(medico: any) {
+    deleteMedico(medico: any) {
     if (!medico || !medico.id) {
       this.messageService.add({ 
         severity: 'error', 
@@ -91,6 +92,7 @@ export class MedicoListar {
       });
       return;
     }
+    
 
     this.confirmationService.confirm({
       message: `Tem certeza que deseja remover o medico ${medico.nome}?`,

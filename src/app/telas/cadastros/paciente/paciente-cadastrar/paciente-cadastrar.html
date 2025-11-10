@@ -1,78 +1,94 @@
-<p-toast></p-toast>
-
 <form #formCadastro="ngForm" (ngSubmit)="onSubmit()">
-  <div class
-="p-fluid grid">
-
-    <div class="col-12 md:col-6 p-2">
-      <p-floatLabel>
-        <input 
-          pInputText 
-          id="nome" 
-          name="nome" 
-          [(ngModel)]="nome" 
-          required 
-        />
-        <label for="nome">Nome Completo</label>
-      </p-floatLabel>
-    </div>
-
-    <div class="col-12 md:col-6 p-2">
-      <p-floatLabel>
-        <p-inputMask 
-          id="cpf" 
-          name="cpf" 
-          mask="999.999.999-99" 
-          [(ngModel)]="cpf" 
+  <div class="row g-3 ">
+    <!-- Nome -->
+    <div class="col-12 md:col-6">
+      <label for="nome" class="form-label">Nome</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-person"></i></span>
+        <input
+          type="text"
+          class="form-control"
+          id="nome"
+          name="nome"
+          placeholder="Nome completo"
+          [(ngModel)]="nome"
           required
         />
-        <label for="cpf">CPF</label>
-      </p-floatLabel>
+      </div>
     </div>
 
-    <div class="col-12 md:col-6 p-2">
-      <p-floatLabel>
-        <p-calendar 
-          id="dataNascimento" 
-          name="dataNascimento" 
-          [(ngModel)]="dataNascimento"
-          dateFormat="dd/mm/yy" 
-           
-          dataType="string" 
+    <!-- CPF -->
+    <div class="col-12 md:col-6">
+      <label for="cpf" class="form-label">CPF</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+        <input
+          type="text"
+          class="form-control"
+          id="cpf"
+          name="cpf"
+          placeholder="000.000.000-00"
+          [(ngModel)]="cpf"
+          mask="000.000.000-00"
           required
         />
-        <label for="dataNascimento">Data de Nascimento</label>
-      </p-floatLabel>
+      </div>
     </div>
 
-    <div class="col-12 md:col-6 p-2">
-      <p-floatLabel>
-        <input 
-          pInputText 
-          id="email" 
-          name="email" 
-          [(ngModel)]="email" 
-          required 
-          email 
-        />
-        <label for="email">Email</label>
-      </p-floatLabel>
-    </div>
+ 
 
-    <div class="col-12 md:col-6 p-2">
-      <p-floatLabel>
-        <p-inputMask 
-          id="telefone" 
-          name="telefone" 
-          mask="(99) 99999-9999" 
-          [(ngModel)]="telefone" 
+    <!-- Data de nascimento -->
+      <div style="margin-left: 15PX;">
+        <label for="cpf" class="form-label">Data de nascimento</label>
+        
+        <div class="card flex justify-center">
+          <p-datepicker [(ngModel)]="dataNascimento" placeholder="Data de nascimento" dateFormat="dd/mm/yy">
+                <ng-template #date let-date>
+                    <strong *ngIf="date.day > 10 && date.day < 15; else elseBlock" style="text-decoration: line-through">{{ date.day }}</strong>
+                    <ng-template #elseBlock>{{ date.day }}</ng-template>
+                </ng-template>
+            </p-datepicker>
+        </div>  
+      </div>
+      
+      
+    <!-- Email -->
+    <div class="col-12 md:col-6">
+      <label for="email" class="form-label">Email</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          placeholder="exemplo@email.com"
+          [(ngModel)]="email"
           required
         />
-        <label for="telefone">Telefone</label>
-      </p-floatLabel>
+      </div>
     </div>
 
- <div class="d-grid mt-4">
+    <!-- Telefone -->
+    <div class="col-12 md:col-6">
+      <label for="telefone" class="form-label">Telefone</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+        <input
+          type="text"
+          class="form-control"
+          id="telefone"
+          name="telefone"
+          placeholder="(00) 00000-0000"
+          [(ngModel)]="telefone"
+          mask="(00) 00000-0000"
+          required
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="d-grid mt-4">
     <button
       type="submit"
       class="btn btn-success "
@@ -80,6 +96,5 @@
     >
       {{ id ? 'Salvar Alterações' : 'Cadastrar Paciente' }}
     </button>
-  </div>
   </div>
 </form>

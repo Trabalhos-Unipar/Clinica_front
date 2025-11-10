@@ -31,18 +31,8 @@ export class PacienteListar {
    pacientes:any[] = [];
    showCadastrarModal: boolean = false;
    selectedPaciente: any = null;
-
-  // UI state for search/pagination
-  searchTerm: string = '';
-  page: number = 1;
-  pageSize: number = 10;
-  // expose global Math to template (used for Math.min)
-  readonly Math = Math;
-    visible: boolean = false;
-  modalAberto = false;
-
-  dependenteSelecionado: any = null;
-  modalEditarAberto = false;
+   dependenteSelecionado: any = null;
+   modalEditarAberto = false;
   
   abrirModalEdicao(dependente: any): void{
     this.dependenteSelecionado = {...dependente};

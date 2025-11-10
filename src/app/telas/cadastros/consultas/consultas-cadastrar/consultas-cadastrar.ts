@@ -1,72 +1,71 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConsultaService } from '../consultas-service';
 import { Router } from '@angular/router';
-import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
-import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
-import { MultiSelectModule } from 'primeng/multiselect';
-
-interface City {
-    name: string,
-    code: string
-}
+import { PacienteService } from '../../paciente/paciente-service';
+import { MedicoService } from '../../medico/medico-service'; // ✅ novo serviço
 
 @Component({
   selector: 'app-consultas-cadastrar',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ToastModule,
-    SelectModule,
-    FormsModule,
-    AutoCompleteModule,
-    FormsModule,
-    MultiSelectModule
-  ],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './consultas-cadastrar.html',
-  styleUrl: './consultas-cadastrar.css',
+  styleUrls: ['./consultas-cadastrar.css'],
 })
 export class ConsultasCadastrar {
+  @Input() dependenteEdicao: any;
+  @Output() fecharModal = new EventEmitter<void>();
 
-   cities!: City[];
+  id!: number;
+  status?: string;
+  horarioAtendimento?: string;
+  paciente: any;
+  medico: any;
 
-    selectedCities!: City[];
-  
-    @Input() dependenteEdicao: any;
-    @Output() fecharModal = new EventEmitter<void>();
-    id?: number;
-    status!: string;
-    horarioAtendimento?: string;
-    paciente?: string;
-    medico?: string;
-
-    
+  listaPacientes: any[] = [];
+  listaMedicos: any[] = [];
 
   constructor(
     private readonly consultaService: ConsultaService,
+    private readonly pacienteService: PacienteService,
+    private readonly medicoService: MedicoService, // ✅ injetado aqui
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    if(this.dependenteEdicao) {
-        this.id = this.dependenteEdicao.id;
-        this.status = this.dependenteEdicao.status;
-        this.horarioAtendimento = this.dependenteEdicao.horarioAtendimento;
-        this.paciente = this.dependenteEdicao.paciente;
-        this.medico = this.dependenteEdicao.medico;
+    if (this.dependenteEdicao) {
+      this.id = this.dependenteEdicao.id;
+      this.status = this.dependenteEdicao.status;
+      this.horarioAtendimento = this.dependenteEdicao.horarioAtendimento;
+      this.paciente = this.dependenteEdicao.paciente;
+      this.medico = this.dependenteEdicao.medico;
     }
-   
 
-        this.cities = [
-            {name: 'New York', code: 'NY'},
-            {name: 'Rome', code: 'RM'},
-            {name: 'London', code: 'LDN'},
-            {name: 'Istanbul', code: 'IST'},
-            {name: 'Paris', code: 'PRS'}
-        ];
-    
+    this.carregarPacientes();
+    this.carregarMedicos();
+  }
+
+  carregarPacientes(): void {
+    this.pacienteService.listarPacientes().subscribe({
+      next: (pacientes: any[]) => {
+        this.listaPacientes = pacientes;
+      },
+      error: (err) => {
+        console.error('Erro ao carregar lista de pacientes:', err);
+      },
+    });
+  }
+
+  carregarMedicos(): void {
+    this.medicoService.listarMedico().subscribe({
+      next: (medicos: any[]) => {
+        this.listaMedicos = medicos;
+      },
+      error: (err) => {
+        console.error('Erro ao carregar lista de médicos:', err);
+      },
+    });
   }
 
   onSubmit(): void {
@@ -75,34 +74,33 @@ export class ConsultasCadastrar {
       status: this.status,
       horarioAtendimento: this.horarioAtendimento,
       paciente: this.paciente,
-      medico: this.medico
+      medico: this.medico,
     };
 
     if (this.id) {
       this.consultaService.atualizarConsulta(dadosEnvio).subscribe({
-        next: (response) => {
-          alert('Dependente atualizado com sucesso!');
+        next: () => {
+          alert('Consulta atualizada com sucesso!');
           this.fecharModal.emit();
         },
         error: (error) => {
-          console.error('Erro ao atualizar', error);
-          alert('Erro ao atualizar dependente.');
-        }
+          console.error('Erro ao atualizar consulta:', error);
+          alert('Erro ao atualizar consulta.');
+        },
       });
     } else {
       this.consultaService.salvarConsulta(dadosEnvio).subscribe({
-        next: (response) => {
-          console.log('Cadastro realizado com sucesso!', response);
-          alert('Cadastro realizado com sucesso!');
+        next: () => {
+          alert('Consulta cadastrada com sucesso!');
           this.fecharModal.emit();
-          if (!this.fecharModal || !this.fecharModal.observers || this.fecharModal.observers.length === 0) {
+          if (!this.fecharModal?.observers?.length) {
             this.router.navigate(['/consultas/listar']);
           }
         },
         error: (error) => {
-          console.error('Erro ao cadastrar', error);
-          alert('Erro ao cadastrar');
-        }
+          console.error('Erro ao cadastrar consulta:', error);
+          alert('Erro ao cadastrar consulta.');
+        },
       });
     }
   }

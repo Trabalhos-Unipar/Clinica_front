@@ -2,6 +2,6 @@ export class Consultas {
   id?: number;
   status!: string;
   horarioAtendimento?: string;
-  paciente?: string;
+  paciente?: any;
   medico?: string;
 }

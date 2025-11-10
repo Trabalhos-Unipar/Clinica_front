@@ -1,71 +1,90 @@
-<form #formCadastro="ngForm" (ngSubmit)="onSubmit()">
-  <div class="row g-3 ">
-    <!-- Nome -->
-    <div class="col-12 md:col-6">
-      <label for="status" class="form-label">status</label>
-      <div class="card flex justify-center">
-    <p-multiselect [options]="cities" [(ngModel)]="selectedCities" placeholder="Select Cities" optionLabel="name" display="chip" class="w-full md:w-80" />
-</div>
-    </div>
+<form #formCadastro="ngForm" (ngSubmit)="onSubmit()" class="p-3">
 
-    <!-- CPF -->
-    <div class="col-12 md:col-6">
-      <label for="horarioAtendimento" class="form-label">horarioAtendimento</label>
+  <div class="row g-3">
+
+    <!-- HORÁRIO DE ATENDIMENTO -->
+    <div class="col-12 col-md-6">
+      <label for="horarioAtendimento" class="form-label">Horário de Atendimento</label>
       <div class="input-group">
-        <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+        <span class="input-group-text">
+          <i class="bi bi-clock"></i>
+        </span>
         <input
           type="text"
           class="form-control"
           id="horarioAtendimento"
           name="horarioAtendimento"
+          placeholder="Ex: 14:00"
           [(ngModel)]="horarioAtendimento"
           required
         />
       </div>
     </div>
 
-    <!-- paciente -->
-    <div class="col-12 md:col-6">
-      <label for="paciente" class="form-label">paciente</label>
+    <!-- PACIENTE -->
+    <div class="col-12 col-md-6">
+      <label for="paciente" class="form-label">Paciente</label>
       <div class="input-group">
-        <span class="input-group-text"><i class="bi bi-person"></i></span>
-        <input
-          type="text"
-          class="form-control"
+        <span class="input-group-text">
+          <i class="bi bi-person"></i>
+        </span>
+        <select
           id="paciente"
           name="paciente"
+          class="form-select"
           [(ngModel)]="paciente"
+          [ngModelOptions]="{ standalone: true }"
           required
-        />
+        >
+          <option value="" disabled selected>Selecione um paciente</option>
+          <option *ngFor="let p of listaPacientes" [ngValue]="p">
+            {{ p.nome }}
+          </option>
+        </select>
       </div>
     </div>
 
-    <!-- medico -->
-    <div class="col-12 md:col-6">
-      <label for="medico" class="form-label">medico</label>
+    <!-- MÉDICO -->
+    <div class="col-12 col-md-6">
+      <label for="medico" class="form-label">Médico</label>
       <div class="input-group">
-        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-        <input
-          type="medico"
-          class="form-control"
+        <span class="input-group-text">
+          <i class="bi bi-person-badge"></i>
+        </span>
+        <select
           id="medico"
           name="medico"
-          placeholder="medico"
+          class="form-select"
           [(ngModel)]="medico"
+          [ngModelOptions]="{ standalone: true }"
           required
-        />
+        >
+          <option value="" disabled selected>Selecione um médico</option>
+          <option *ngFor="let m of listaMedicos" [ngValue]="m">
+            {{ m.nome }}
+          </option>
+        </select>
       </div>
     </div>
+
   </div>
 
-  <div class="d-grid mt-4">
+  <!-- BOTÕES -->
+  <div class="d-flex justify-content-between mt-4">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="fecharModal.emit()"
+    >
+      Cancelar
+    </button>
+
     <button
       type="submit"
-      class="btn btn-success "
+      class="btn btn-success"
       [disabled]="!formCadastro.valid"
     >
-      {{ id ? 'Salvar Alterações' : 'Cadastrar Paciente' }}
+      {{ id ? 'Salvar Alterações' : 'Cadastrar Consulta' }}
     </button>
-    
   </div>
 </form>
