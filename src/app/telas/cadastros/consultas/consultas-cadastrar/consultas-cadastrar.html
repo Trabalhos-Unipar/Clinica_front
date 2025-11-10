@@ -2,22 +2,29 @@
 
   <div class="row g-3">
 
-    <!-- HORÁRIO DE ATENDIMENTO -->
+ <!-- HORÁRIO DE ATENDIMENTO (AGORA É DROPDOWN) -->
     <div class="col-12 col-md-6">
       <label for="horarioAtendimento" class="form-label">Horário de Atendimento</label>
       <div class="input-group">
         <span class="input-group-text">
           <i class="bi bi-clock"></i>
         </span>
-        <input
-          type="text"
-          class="form-control"
+
+        <select
           id="horarioAtendimento"
           name="horarioAtendimento"
-          placeholder="Ex: 14:00"
+          class="form-select"
           [(ngModel)]="horarioAtendimento"
           required
-        />
+        >
+          <option value="" disabled selected>Selecione um horário</option>
+
+          <option *ngFor="let h of horariosDisponiveis"
+                  [value]="h.diaSemana + ' — ' + h.horaInicio + ' às ' + h.horaFim">
+            {{ h.diaSemana }} — {{ h.horaInicio }} às {{ h.horaFim }}
+          </option>
+
+        </select>
       </div>
     </div>
 
@@ -55,7 +62,8 @@
           id="medico"
           name="medico"
           class="form-select"
-          [(ngModel)]="medico"
+         [(ngModel)]="medico"
+          (change)="onMedicoSelecionado()"
           [ngModelOptions]="{ standalone: true }"
           required
         >

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { PacienteService } from '../../paciente/paciente-service';
-import { MedicoService } from '../../medico/medico-service'; // ✅ novo serviço
+import { MedicoService } from '../../medico/medico-service';
 
 @Component({
   selector: 'app-consultas-cadastrar',
@@ -26,20 +26,29 @@ export class ConsultasCadastrar {
   listaPacientes: any[] = [];
   listaMedicos: any[] = [];
 
+  // ✅ horários do médico selecionado vem do backend
+  horariosDisponiveis: any[] = [];
+
   constructor(
     private readonly consultaService: ConsultaService,
     private readonly pacienteService: PacienteService,
-    private readonly medicoService: MedicoService, // ✅ injetado aqui
+    private readonly medicoService: MedicoService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+
     if (this.dependenteEdicao) {
       this.id = this.dependenteEdicao.id;
       this.status = this.dependenteEdicao.status;
       this.horarioAtendimento = this.dependenteEdicao.horarioAtendimento;
       this.paciente = this.dependenteEdicao.paciente;
       this.medico = this.dependenteEdicao.medico;
+
+      // ✅ Se estiver editando, já inicializa a lista de horários
+      if (this.medico && this.medico.horarios) {
+        this.horariosDisponiveis = this.medico.horarios;
+      }
     }
 
     this.carregarPacientes();
@@ -51,9 +60,7 @@ export class ConsultasCadastrar {
       next: (pacientes: any[]) => {
         this.listaPacientes = pacientes;
       },
-      error: (err) => {
-        console.error('Erro ao carregar lista de pacientes:', err);
-      },
+      error: (err) => console.error('Erro ao carregar lista de pacientes:', err),
     });
   }
 
@@ -62,10 +69,17 @@ export class ConsultasCadastrar {
       next: (medicos: any[]) => {
         this.listaMedicos = medicos;
       },
-      error: (err) => {
-        console.error('Erro ao carregar lista de médicos:', err);
-      },
+      error: (err) => console.error('Erro ao carregar lista de médicos:', err),
     });
+  }
+
+  // ✅ MÉTODO CHAMADO QUANDO O SELECT DO MÉDICO MUDA
+  onMedicoSelecionado() {
+    if (this.medico && this.medico.horarios) {
+      this.horariosDisponiveis = this.medico.horarios;
+    } else {
+      this.horariosDisponiveis = [];
+    }
   }
 
   onSubmit(): void {
