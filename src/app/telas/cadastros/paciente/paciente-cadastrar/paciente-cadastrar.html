@@ -1,7 +1,7 @@
 <form #formCadastro="ngForm" (ngSubmit)="onSubmit()">
-  <div class="row g-3 ">
+  <div class="row g-3">
     <!-- Nome -->
-    <div class="col-12 md:col-6">
+    <div class="col-md-6">
       <label for="nome" class="form-label">Nome</label>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-person"></i></span>
@@ -18,7 +18,7 @@
     </div>
 
     <!-- CPF -->
-    <div class="col-12 md:col-6">
+    <div class="col-md-6">
       <label for="cpf" class="form-label">CPF</label>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
@@ -27,33 +27,34 @@
           class="form-control"
           id="cpf"
           name="cpf"
+         mask="000.000.000-00"
+      [dropSpecialCharacters]="false"
+      autocomplete="off" 
           placeholder="000.000.000-00"
           [(ngModel)]="cpf"
-          mask="000.000.000-00"
           required
         />
       </div>
     </div>
 
- 
-
     <!-- Data de nascimento -->
-      <div style="margin-left: 15PX;">
-        <label for="cpf" class="form-label">Data de nascimento</label>
-        
-        <div class="card flex justify-center">
-          <p-datepicker [(ngModel)]="dataNascimento" placeholder="Data de nascimento" dateFormat="dd/mm/yy">
-                <ng-template #date let-date>
-                    <strong *ngIf="date.day > 10 && date.day < 15; else elseBlock" style="text-decoration: line-through">{{ date.day }}</strong>
-                    <ng-template #elseBlock>{{ date.day }}</ng-template>
-                </ng-template>
-            </p-datepicker>
-        </div>  
+    <div class="col-md-6">
+      <label for="dataNascimento" class="form-label">Data de Nascimento</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+        <input
+          type="date"
+          id="dataNascimento"
+          name="dataNascimento"
+          [(ngModel)]="dataNascimento"
+          class="form-control"
+          required
+        />
       </div>
-      
-      
+    </div>
+
     <!-- Email -->
-    <div class="col-12 md:col-6">
+    <div class="col-md-6">
       <label for="email" class="form-label">Email</label>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-envelope"></i></span>
@@ -70,7 +71,7 @@
     </div>
 
     <!-- Telefone -->
-    <div class="col-12 md:col-6">
+    <div class="col-md-6">
       <label for="telefone" class="form-label">Telefone</label>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-telephone"></i></span>
@@ -79,9 +80,11 @@
           class="form-control"
           id="telefone"
           name="telefone"
+          mask="(00) 00000-0000"
+          [dropSpecialCharacters]="false"
+          autocomplete="off"
           placeholder="(00) 00000-0000"
           [(ngModel)]="telefone"
-          mask="(00) 00000-0000"
           required
         />
       </div>
@@ -91,7 +94,7 @@
   <div class="d-grid mt-4">
     <button
       type="submit"
-      class="btn btn-success "
+      class="btn btn-success"
       [disabled]="!formCadastro.valid"
     >
       {{ id ? 'Salvar Alterações' : 'Cadastrar Paciente' }}

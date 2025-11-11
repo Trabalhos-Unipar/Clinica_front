@@ -1,11 +1,9 @@
 <form #formCadastro="ngForm" (ngSubmit)="onSubmit()">
   <div class="row g-3">
-    <!-- Nome -->
     <div class="col-12 col-md-6">
       <label for="nome" class="form-label">Nome</label>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-person"></i></span>
-        <!-- MUDANÇA: [(ngModel)]="medico.nome" -->
         <input
           type="text"
           class="form-control"
@@ -18,12 +16,10 @@
       </div>
     </div>
 
-    <!-- CRM -->
     <div class="col-12 col-md-6">
       <label for="crm" class="form-label">CRM</label>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
-         <!-- MUDANÇA: [(ngModel)]="medico.crm" -->
         <input
           type="text"
           class="form-control"
@@ -36,16 +32,14 @@
       </div>
     </div>
 
-    <!-- Especialidade -->
     <div class="col-12 col-md-6">
       <label for="especialidade" class="form-label">Especialidade</label>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-heart-pulse"></i></span>
-        <!-- MUDANÇA: [(ngModel)]="medico.especialidade" -->
         <select
           id="especialidade"
           name="especialidade"
-          class="form-select"
+          class="form-select custom-select"
           [(ngModel)]="medico.especialidade"
           required
         >
@@ -120,11 +114,11 @@
     >
       <!-- ... (Campos de horário já usavam 'horario.diaSemana', etc. Está correto) ... -->
       
-        <!-- Dia da Semana -->
+        <!-- Dia da Semana --> 
       <div class="col-md-4">
         <label class="form-label">Dia da Semana</label>
         <select
-          class="form-select"
+          class="form-select custom-select"
           [(ngModel)]="horario.diaSemana"
           name="diaSemana{{ i }}"
           required
@@ -167,7 +161,7 @@
           class="btn btn-outline-danger btn-sm"
           (click)="removerHorario(i)"
         >
-          <i class="bi bi-trash"></i>
+          <i class="fa-solid fa-trash"></i>
         </button>
       </div>
     </div>

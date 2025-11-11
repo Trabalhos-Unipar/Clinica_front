@@ -37,6 +37,19 @@ export class ConsultasListar {
     private readonly confirmationService: ConfirmationService    
   ) {}
 
+  ngOnInit():void{
+    this.carregarConsultas();
+    // attempt to detect sidebar width and set CSS variable so the pacient list centers correctly
+    try {
+      const sidebarEl = document.querySelector('app-slidebar') as HTMLElement | null;
+      const width = sidebarEl ? Math.round(sidebarEl.getBoundingClientRect().width) : 280;
+      document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
+    } catch (e) {
+      // ignore - if DOM not ready or access blocked, CSS fallback variable will be used
+      console.warn('Não foi possível detectar largura da sidebar automaticamente', e);
+    }
+  }
+
    carregarConsultas(): void {
     this.consultaService.listarConsultas().subscribe({
       next: (response) => {
@@ -60,7 +73,7 @@ deleteConsulta(consulta: any) {
     }
 
     this.confirmationService.confirm({
-      message: `Tem certeza que deseja remover o consulta ${consulta.nome}?`,
+      message: `Tem certeza que deseja remover a consulta do paciente ${consulta.paciente?.nome}?`,
       header: 'Confirmar Remoção',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sim',
@@ -71,7 +84,7 @@ deleteConsulta(consulta: any) {
             this.messageService.add({ 
               severity: 'success', 
               summary: 'Sucesso', 
-              detail: `Consulta ${consulta.nome} removido com sucesso!`,
+              detail: `Consulta do paciente ${consulta.paciente?.nome} removida com sucesso!`,
               life: 3000
             });
             this.carregarConsultas();
@@ -87,7 +100,7 @@ deleteConsulta(consulta: any) {
             if (erro.status === 404) {
               mensagem = 'Endpoint não encontrado. Verifique a URL da API.';
             } else if (erro.status === 400) {
-              mensagem = erro.error?.message || 'Requisição inválida.';
+              mensagem = erro.error?.message || 'Requisição inváli  da.';
             } else if (erro.status === 500) {
               mensagem = 'Erro no servidor. Tente novamente mais tarde.';
             }

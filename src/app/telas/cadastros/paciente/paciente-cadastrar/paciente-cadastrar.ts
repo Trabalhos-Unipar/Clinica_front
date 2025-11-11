@@ -1,45 +1,44 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ButtonDirective, ButtonModule } from "primeng/button";
-import { ToastModule } from 'primeng/toast';
-import { Router, RouterLink } from '@angular/router';
-import { SelectModule } from 'primeng/select';
-import { AutoComplete, AutoCompleteModule } from 'primeng/autocomplete';
-import { PacienteService } from '../paciente-service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { DatePickerModule } from 'primeng/datepicker';
-import { FloatLabel } from 'primeng/floatlabel';
+import { PacienteService } from '../paciente-service';
+import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 
 @Component({
   selector: 'app-paciente-cadastrar',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     ToastModule,
-    SelectModule,
-    FormsModule,
-    AutoCompleteModule,
-    DatePickerModule,
     ButtonModule,
-    FloatLabel
-],
+    NgxMaskDirective,
+    NgxMaskPipe,
+    
+  ],
+   providers: [
+    provideNgxMask(),
+    MessageService
+  ],
   templateUrl: './paciente-cadastrar.html',
   styleUrls: ['./paciente-cadastrar.css']
 })
-export class PacienteCadastrar implements OnInit{
+export class PacienteCadastrar implements OnInit {
 
-    @Input() dependenteEdicao: any;
-    @Output() fecharModal = new EventEmitter<void>();
-    id!: string;
-    nome!: string;
-    dataNascimento!: string;
-    cpf!: string;
-    email!: string;
-    telefone!: string;
+  @Input() dependenteEdicao: any;
+  @Output() fecharModal = new EventEmitter<void>();
 
-    
+  id!: string;
+  nome!: string;
+  dataNascimento!: string;
+  cpf: string = '';
+  email!: string;
+  telefone!: string;
 
   constructor(
     private readonly pacienteService: PacienteService,
@@ -48,24 +47,25 @@ export class PacienteCadastrar implements OnInit{
   ) {}
 
   ngOnInit(): void {
-    if(this.dependenteEdicao) {
-        this.id = this.dependenteEdicao.id;
-        this.nome = this.dependenteEdicao.nome;
-        this.dataNascimento = this.dependenteEdicao.dataNascimento;
-        this.cpf = this.dependenteEdicao.cpf;
-        this.email = this.dependenteEdicao.email;
-        this.telefone = this.dependenteEdicao.telefone;
-        this.dataNascimento = this.dependenteEdicao.dataNascimento;
+    if (this.dependenteEdicao) {
+      this.id = this.dependenteEdicao.id;
+      this.nome = this.dependenteEdicao.nome;
+      this.dataNascimento = this.dependenteEdicao.dataNascimento;
+      this.cpf = this.dependenteEdicao.cpf;
+      this.email = this.dependenteEdicao.email;
+      this.telefone = this.dependenteEdicao.telefone;
     }
   }
 
-  
-
   onSubmit(): void {
+    const dataFormatada = this.dataNascimento
+  ? this.dataNascimento.replace(/-/g, '/')
+  : null;
+
     const dadosEnvio = {
       id: this.id,
       nome: this.nome,
-      dataNascimento: this.dataNascimento,
+      dataNascimento: dataFormatada,
       cpf: this.cpf,
       telefone: this.telefone,
       email: this.email
@@ -73,13 +73,13 @@ export class PacienteCadastrar implements OnInit{
 
     if (this.id) {
       this.pacienteService.atualizarPaciente(dadosEnvio).subscribe({
-        next: (response) => {
-          alert('Dependente atualizado com sucesso!');
+        next: () => {
+          alert('Paciente atualizado com sucesso!');
           this.fecharModal.emit();
         },
         error: (error) => {
           console.error('Erro ao atualizar', error);
-          alert('Erro ao atualizar dependente.');
+          alert('Erro ao atualizar paciente.');
         }
       });
     } else {
@@ -88,21 +88,15 @@ export class PacienteCadastrar implements OnInit{
           console.log('Cadastro realizado com sucesso!', response);
           alert('Cadastro realizado com sucesso!');
           this.fecharModal.emit();
-          // Only navigate if this component is not being used inside a modal (no listeners)
-          if (!this.fecharModal || !this.fecharModal.observers || this.fecharModal.observers.length === 0) {
+          if (!this.fecharModal || !this.fecharModal.observers?.length) {
             this.router.navigate(['/pacientes/listar']);
           }
         },
         error: (error) => {
           console.error('Erro ao cadastrar', error);
-          alert('Erro ao cadastrar');
+          alert('Erro ao cadastrar paciente.');
         }
       });
     }
   }
-  
-  date: Date | undefined;
-
-    dates: Date[] | undefined;
-
 }

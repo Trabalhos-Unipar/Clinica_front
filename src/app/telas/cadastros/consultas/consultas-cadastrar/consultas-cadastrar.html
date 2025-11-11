@@ -1,57 +1,6 @@
-<form #formCadastro="ngForm" (ngSubmit)="onSubmit()" class="p-3">
-
+<form #formCadastro="ngForm" (ngSubmit)="onSubmit()">
   <div class="row g-3">
-
- <!-- HORÁRIO DE ATENDIMENTO (AGORA É DROPDOWN) -->
-    <div class="col-12 col-md-6">
-      <label for="horarioAtendimento" class="form-label">Horário de Atendimento</label>
-      <div class="input-group">
-        <span class="input-group-text">
-          <i class="bi bi-clock"></i>
-        </span>
-
-        <select
-          id="horarioAtendimento"
-          name="horarioAtendimento"
-          class="form-select"
-          [(ngModel)]="horarioAtendimento"
-          required
-        >
-          <option value="" disabled selected>Selecione um horário</option>
-
-          <option *ngFor="let h of horariosDisponiveis"
-                  [value]="h.diaSemana + ' — ' + h.horaInicio + ' às ' + h.horaFim">
-            {{ h.diaSemana }} — {{ h.horaInicio }} às {{ h.horaFim }}
-          </option>
-
-        </select>
-      </div>
-    </div>
-
-    <!-- PACIENTE -->
-    <div class="col-12 col-md-6">
-      <label for="paciente" class="form-label">Paciente</label>
-      <div class="input-group">
-        <span class="input-group-text">
-          <i class="bi bi-person"></i>
-        </span>
-        <select
-          id="paciente"
-          name="paciente"
-          class="form-select"
-          [(ngModel)]="paciente"
-          [ngModelOptions]="{ standalone: true }"
-          required
-        >
-          <option value="" disabled selected>Selecione um paciente</option>
-          <option *ngFor="let p of listaPacientes" [ngValue]="p">
-            {{ p.nome }}
-          </option>
-        </select>
-      </div>
-    </div>
-
-    <!-- MÉDICO -->
+    <!-- Médico -->
     <div class="col-12 col-md-6">
       <label for="medico" class="form-label">Médico</label>
       <div class="input-group">
@@ -61,8 +10,8 @@
         <select
           id="medico"
           name="medico"
-          class="form-select"
-         [(ngModel)]="medico"
+          class="form-select custom-select"
+          [(ngModel)]="medico"
           (change)="onMedicoSelecionado()"
           [ngModelOptions]="{ standalone: true }"
           required
@@ -75,23 +24,72 @@
       </div>
     </div>
 
+    <!-- Paciente -->
+    <div class="col-12 col-md-6">
+      <label for="paciente" class="form-label">Paciente</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-person"></i></span>
+        <select
+          id="paciente"
+          name="paciente"
+          class="form-select custom-select"
+          [(ngModel)]="paciente"
+          [ngModelOptions]="{ standalone: true }"
+          required
+        >
+          <option value="" disabled selected>Selecione um paciente</option>
+          <option *ngFor="let p of listaPacientes" [ngValue]="p">
+            {{ p.nome }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Dia da Semana -->
+<div class="col-12 col-md-6">
+  <label for="diaSemana" class="form-label">Dia da Semana</label>
+  <div class="input-group">
+    <span class="input-group-text"><i class="bi bi-calendar-week"></i></span>
+    <select
+      id="diaSemana"
+      name="diaSemana"
+      class="form-select custom-select"
+      [(ngModel)]="diaSelecionado"
+      (change)="gerarHorarios()"
+      required
+    >
+      <option value="" disabled selected>Selecione um dia</option>
+      <option *ngFor="let dia of diasDisponiveis" [value]="dia">
+        {{ dia }}
+      </option>
+    </select>
   </div>
+</div>
 
-  <!-- BOTÕES -->
-  <div class="d-flex justify-content-between mt-4">
-    <button
-      type="button"
-      class="btn btn-secondary"
-      (click)="fecharModal.emit()"
+<!-- Horário -->
+<div class="col-12 col-md-6">
+  <label for="horaConsulta" class="form-label">Horário</label>
+  <div class="input-group">
+    <span class="input-group-text"><i class="bi bi-clock"></i></span>
+    <select
+      id="horaConsulta"
+      name="horaConsulta"
+      class="form-select custom-select"
+      [(ngModel)]="horaConsulta"
+      required
     >
-      Cancelar
-    </button>
+      <option value="" disabled selected>Selecione um horário</option>
+      <option *ngFor="let h of horariosGerados" [value]="h">{{ h }}</option>
+    </select>
+  </div>
+</div>
 
-    <button
-      type="submit"
-      class="btn btn-success"
-      [disabled]="!formCadastro.valid"
-    >
+  </div>
+  <hr class="my-4" />
+
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-secondary me-2 px-4" (click)="fecharModal.emit()">Cancelar</button>
+    <button type="submit" class="btn btn-success px-4" [disabled]="!formCadastro.valid">
       {{ id ? 'Salvar Alterações' : 'Cadastrar Consulta' }}
     </button>
   </div>

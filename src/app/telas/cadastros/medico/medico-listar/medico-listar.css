@@ -37,14 +37,7 @@
   width: 100%;
 }
 
-/* REMOVI a regra .paciente-fullwidth .card 
-  pois ela não é mais necessária.
-*/
 
-/* --- O RESTO DO SEU CSS (Tabela, Modal, etc.) --- */
-/* (Tudo abaixo daqui estava correto e foi mantido) */
-
-/* Table modern tweaks */
 .table {
   width: 100%;
 }

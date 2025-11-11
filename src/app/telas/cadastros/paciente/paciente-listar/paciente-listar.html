@@ -47,7 +47,7 @@
                 <td>{{ paciente.email }}</td>
                 <td>{{ paciente.cpf }}</td>
                 <td>{{ paciente.telefone }}</td>
-                <td>{{ paciente.dataNascimento }}</td>
+                <td>{{ paciente.dataNascimento | date:'dd/MM/yyyy' }}</td>
                 <td class="text-center d-flex justify-content-around">
                   <button class="btn btn-sm btn-danger me-1" (click)="deletePaciente(paciente)" >
                     <i class="fa-solid fa-trash"></i>
