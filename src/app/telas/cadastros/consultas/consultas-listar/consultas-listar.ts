@@ -191,4 +191,35 @@ export class ConsultasListar {
     this.selectedConsulta = null;
     this.carregarConsultas();
   }
+
+    concluirConsulta(consulta: any): void {
+  if (!consulta?.id) return;
+
+  this.confirmationService.confirm({
+    message: 'Deseja marcar esta consulta como concluída?',
+    acceptLabel: 'Sim',
+    rejectLabel: 'Não',
+    acceptButtonStyleClass: 'p-button-success',
+    accept: () => {
+      this.consultaService.concluirConsulta(consulta.id).subscribe({
+        next: (resp) => {
+          consulta.status = resp.status;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Consulta concluída',
+            detail: 'O status foi atualizado para Concluído.'
+          });
+        },
+        error: (err) => {
+          console.error('Erro ao concluir consulta:', err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erro',
+            detail: 'Não foi possível concluir a consulta.'
+          });
+        }
+      });
+    }
+  });
+}
 }

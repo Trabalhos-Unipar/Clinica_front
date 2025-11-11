@@ -50,27 +50,30 @@
 
                 <td class="text-center d-flex justify-content-around">
 
-                  <!-- Botão único de prontuário -->
                   <button class="btn btn-sm btn-secondary"
                           title="Cadastrar ou Visualizar Prontuário"
                           (click)="openProntuario(consulta)">
                     <i class="fa-solid fa-file-medical"></i>
                   </button>
 
-                  <!-- Botão editar consulta -->
                   <button class="btn btn-sm btn-info text-white"
                           title="Editar consulta"
                           (click)="openCadastrar(consulta)">
                     <i class="fa-solid fa-pencil"></i>
                   </button>
 
-                  <!-- Botão deletar consulta -->
                   <button class="btn btn-sm btn-danger"
                           title="Excluir consulta"
                           (click)="deleteConsulta(consulta)">
                     <i class="fa-solid fa-trash"></i>
                   </button>
-
+                  <button 
+                      class="btn btn-sm btn-success me-1" 
+                      title="Concluir consulta"
+                      [disabled]="consulta.status === 'Concluído'"
+                      (click)="concluirConsulta(consulta)">
+                      <i class="fa-solid fa-check"></i>
+                  </button>
                 </td>
               </tr>
             </tbody>

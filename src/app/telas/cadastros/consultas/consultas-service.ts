@@ -30,4 +30,8 @@ export class ConsultaService {
   deleteConsulta(id: string) {
     return this.httpConsulta.delete(`${this.urlConsulta}/deletar-consulta/${id}`);
   }
+
+  concluirConsulta(id: number) {
+  return this.httpConsulta.patch<any>(`${this.urlConsulta}/concluir/${id}`, {}); 
+}
 }
