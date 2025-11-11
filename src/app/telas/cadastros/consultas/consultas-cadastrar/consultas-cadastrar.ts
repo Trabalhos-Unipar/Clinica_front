@@ -138,33 +138,22 @@ export class ConsultasCadastrar {
       diaConsulta: this.diaSelecionado
     };
 
-    if (this.id) {
-      this.consultaService.atualizarConsulta(dadosEnvio).subscribe({
-        next: () => {
-          alert('Consulta atualizada com sucesso!');
-          this.fecharModal.emit();
-        },
-        error: (error) => {
-          console.error('Erro ao atualizar consulta:', error);
-          alert('Erro ao atualizar consulta.');
-        },
-      });
-    } else {
-      this.consultaService.salvarConsulta(dadosEnvio).subscribe({
-        next: () => {
-          alert('Consulta cadastrada com sucesso!');
-          this.fecharModal.emit();
-          if (!this.fecharModal?.observers?.length) {
-            this.router.navigate(['/consultas/listar']);
-          }
-        },
-        error: (error) => {
-          console.error('Erro ao cadastrar consulta:', error);
-          alert('Erro ao cadastrar consulta.');
-        },
-      });
-    }
-  }
+    this.consultaService.salvarConsulta(dadosEnvio).subscribe({
+    next: () => {
+      alert('Consulta cadastrada com sucesso!');
+      this.fecharModal.emit();
+      this.gerarHorarios(); // ✅ Atualiza lista removendo horário usado
+    },
+    error: (error) => {
+      if (error.status === 400) {
+        alert(error.error.message || 'Horário já ocupado.');
+      } else {
+        alert('Erro ao cadastrar consulta.');
+      }
+    },
+  });
+}
+
 
   // Mantém suas propriedades auxiliares
   datetime12h: Date[] | undefined;

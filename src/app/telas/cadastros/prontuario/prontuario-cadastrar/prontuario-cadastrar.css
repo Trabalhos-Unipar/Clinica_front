@@ -1,0 +1,19 @@
+.prontuario-container {
+  padding: 1rem;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.campo {
+  margin-bottom: 1rem;
+}
+
+.campo p {
+  background-color: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+button {
+  min-width: 120px;
+}

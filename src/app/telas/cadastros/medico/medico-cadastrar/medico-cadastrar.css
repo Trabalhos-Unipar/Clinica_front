@@ -11,4 +11,12 @@
   background-color: #fff;
 }
 
-    
+.scrollable-div {
+  max-height: 40vh;   
+  overflow-y: auto;   
+  overflow-x: hidden; 
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box; 
+}
+

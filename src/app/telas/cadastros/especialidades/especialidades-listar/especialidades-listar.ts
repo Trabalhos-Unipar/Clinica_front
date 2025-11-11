@@ -32,14 +32,6 @@ export class EspecialidadesListar {
    showCadastrarModal: boolean = false;
    selectedEspecialidade: any = null;
 
-   // UI state for search/pagination
-  searchTerm: string = '';
-  page: number = 1;
-  pageSize: number = 10;
-  // expose global Math to template (used for Math.min)
-  readonly Math = Math;
-    visible: boolean = false;
-  modalAberto = false;
 
   dependenteSelecionado: any = null;
   modalEditarAberto = false;
@@ -87,42 +79,6 @@ export class EspecialidadesListar {
     });
 }
 
-  // search input handler
-  onSearch(value: string) {
-    this.searchTerm = (value || '').toLowerCase().trim();
-    this.page = 1;
-  }
-
-  setPageSize(size: number | string) {
-    this.pageSize = Number(size) || 10;
-    this.page = 1;
-  }
-
-  confirm2(event: Event) {
-        this.confirmationService.confirm({
-            target: event.target as EventTarget,
-            message: 'Do you want to delete this record?',
-            header: 'Danger Zone',
-            icon: 'pi pi-info-circle',
-            rejectLabel: 'Cancel',
-            rejectButtonProps: {
-                label: 'Cancel',
-                severity: 'secondary',
-                outlined: true,
-            },
-            acceptButtonProps: {
-                label: 'Delete',
-                severity: 'danger',
-            },
-
-            accept: () => {
-                this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' });
-            },
-            reject: () => {
-                this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
-            },
-        });
-    }
 
   deleteEspecialidade(especialidade: any) {
     if (!especialidade || !especialidade.id) {

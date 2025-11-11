@@ -83,6 +83,9 @@
           type="text"
           class="form-control"
           id="telefone"
+          mask="(00) 00000-0000"
+          [dropSpecialCharacters]="false"
+          autocomplete="off" 
           name="telefone"
           placeholder="(00) 00000-0000"
           [(ngModel)]="medico.telefone"
@@ -93,7 +96,7 @@
   </div>
 
   <hr class="my-4" />
-
+<div class="scrollable-div">
   <!-- Adicionar Horários (Esta parte já estava correta) -->
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0">Horários de Atendimento</h5>
@@ -170,7 +173,7 @@
   <ng-template #semHorarios>
     <p class="text-muted">Nenhum horário adicionado.</p>
   </ng-template>
-
+</div>
   <hr class="my-4" />
 
   <!-- Botão de Cadastro -->

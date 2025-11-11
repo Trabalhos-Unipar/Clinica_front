@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { ConsultaService } from '../consultas-service';
 import { ConsultasCadastrar } from '../consultas-cadastrar/consultas-cadastrar';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -8,9 +8,12 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ProntuarioCadastrar } from '../../prontuario/prontuario-cadastrar/prontuario-cadastrar';
+import { ProntuarioService } from '../../prontuario/prontuario-service';
 
 @Component({
   selector: 'app-consultas-listar',
+  standalone: true,
   imports: [
     CommonModule,
     ConsultasCadastrar,
@@ -18,39 +21,49 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ButtonModule,
     CardModule,
     ToastModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    ProntuarioCadastrar
   ],
-  providers: [MessageService, ConfirmationService],
+  providers: [MessageService, ConfirmationService, ProntuarioService],
   templateUrl: './consultas-listar.html',
-  styleUrl: './consultas-listar.css',
+  styleUrls: ['./consultas-listar.css']
 })
 export class ConsultasListar {
- 
-  consultas:any[] = [];
-   showCadastrarModal: boolean = false;
-   selectedConsulta: any = null;
 
-   constructor(
+  consultas: any[] = [];
+  showCadastrarModal = false;
+  selectedConsulta: any = null;
+
+  dependenteSelecionado: any = null;
+  modalEditarAberto = false;
+
+  showProntuarioModal = false;
+  selectedConsultaForProntuario: any = null;
+  prontuarioSelecionado: any = null;
+  modoVisualizacaoProntuario = false;
+
+  constructor(
     private readonly consultaService: ConsultaService,
+    private readonly prontuarioService: ProntuarioService,
     private readonly detectorMudanca: ChangeDetectorRef,
     private readonly messageService: MessageService,
-    private readonly confirmationService: ConfirmationService    
+    private readonly confirmationService: ConfirmationService
   ) {}
 
-  ngOnInit():void{
+  ngOnInit(): void {
     this.carregarConsultas();
-    // attempt to detect sidebar width and set CSS variable so the pacient list centers correctly
+
+    // tentativa de detectar largura da sidebar (opcional)
     try {
       const sidebarEl = document.querySelector('app-slidebar') as HTMLElement | null;
       const width = sidebarEl ? Math.round(sidebarEl.getBoundingClientRect().width) : 280;
       document.documentElement.style.setProperty('--sidebar-width', `${width}px`);
     } catch (e) {
-      // ignore - if DOM not ready or access blocked, CSS fallback variable will be used
       console.warn('Não foi possível detectar largura da sidebar automaticamente', e);
     }
   }
 
-   carregarConsultas(): void {
+  carregarConsultas(): void {
     this.consultaService.listarConsultas().subscribe({
       next: (response) => {
         this.consultas = response;
@@ -60,14 +73,64 @@ export class ConsultasListar {
         console.error('Erro ao carregar consultas:', error);
       }
     });
-}
+  }
 
-deleteConsulta(consulta: any) {
+  abrirModalEdicao(dependente: any): void {
+    this.dependenteSelecionado = { ...dependente };
+    this.modalEditarAberto = true;
+  }
+
+  fecharModalEdicao(): void {
+    this.modalEditarAberto = false;
+    this.dependenteSelecionado = null;
+    this.carregarConsultas();
+  }
+
+  // ✅ NOVA FUNÇÃO UNIFICADA: abrir prontuário (visualizar ou cadastrar)
+  openProntuario(consulta: any) {
+    if (!consulta?.id) return;
+
+    this.prontuarioService.buscarPorConsulta(consulta.id).subscribe({
+      next: (prontuario) => {
+        if (prontuario && prontuario.id) {
+          // existe prontuário -> exibe em modo de visualização
+          this.prontuarioSelecionado = prontuario;
+          this.selectedConsultaForProntuario = consulta;
+          this.modoVisualizacaoProntuario = true;
+          this.showProntuarioModal = true;
+        } else {
+          // não existe prontuário -> abre tela de cadastro
+          this.selectedConsultaForProntuario = consulta;
+          this.prontuarioSelecionado = null;
+          this.modoVisualizacaoProntuario = false;
+          this.showProntuarioModal = true;
+        }
+      },
+      error: () => {
+        // erro = trata como sem prontuário
+        this.selectedConsultaForProntuario = consulta;
+        this.prontuarioSelecionado = null;
+        this.modoVisualizacaoProntuario = false;
+        this.showProntuarioModal = true;
+      }
+    });
+  }
+
+  // fechar modal do prontuário
+  closeProntuarioModal() {
+    this.showProntuarioModal = false;
+    this.selectedConsultaForProntuario = null;
+    this.prontuarioSelecionado = null;
+    this.modoVisualizacaoProntuario = false;
+    this.carregarConsultas();
+  }
+
+  deleteConsulta(consulta: any) {
     if (!consulta || !consulta.id) {
-      this.messageService.add({ 
-        severity: 'error', 
-        summary: 'Erro', 
-        detail: 'Consulta inválido' 
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Consulta inválida'
       });
       return;
     }
@@ -81,9 +144,9 @@ deleteConsulta(consulta: any) {
       accept: () => {
         this.consultaService.deleteConsulta(consulta.id).subscribe({
           next: () => {
-            this.messageService.add({ 
-              severity: 'success', 
-              summary: 'Sucesso', 
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Sucesso',
               detail: `Consulta do paciente ${consulta.paciente?.nome} removida com sucesso!`,
               life: 3000
             });
@@ -91,23 +154,19 @@ deleteConsulta(consulta: any) {
           },
           error: (erro) => {
             console.error('Erro ao deletar:', erro);
-            console.log('URL da requisição:', `${this.consultaService.urlConsulta}/excluir/${consulta.id}`);
-            console.log('Status do erro:', erro.status);
-            console.log('Mensagem do erro:', erro.error);
-            
             let mensagem = 'Erro ao remover consulta. Tente novamente.';
-            
+
             if (erro.status === 404) {
               mensagem = 'Endpoint não encontrado. Verifique a URL da API.';
             } else if (erro.status === 400) {
-              mensagem = erro.error?.message || 'Requisição inváli  da.';
+              mensagem = erro.error?.message || 'Requisição inválida.';
             } else if (erro.status === 500) {
               mensagem = 'Erro no servidor. Tente novamente mais tarde.';
             }
-            
-            this.messageService.add({ 
-              severity: 'error', 
-              summary: 'Erro', 
+
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Erro',
               detail: `${mensagem} (Status: ${erro.status})`,
               life: 5000
             });
@@ -117,15 +176,19 @@ deleteConsulta(consulta: any) {
     });
   }
 
-openCadastrar(consultas?: any) {
+  @HostListener('window:keydown.escape')
+  onEsc() {
+    if (this.showCadastrarModal) this.closeCadastrarModal();
+  }
+
+  openCadastrar(consultas?: any) {
     this.selectedConsulta = consultas ?? null;
     this.showCadastrarModal = true;
   }
 
-   closeCadastrarModal() {
+  closeCadastrarModal() {
     this.showCadastrarModal = false;
     this.selectedConsulta = null;
     this.carregarConsultas();
-    };
-
+  }
 }

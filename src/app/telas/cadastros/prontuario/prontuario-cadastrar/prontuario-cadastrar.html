@@ -1,0 +1,84 @@
+<p-confirmDialog></p-confirmDialog>
+
+<div class="prontuario-container">
+  <div class="top-info">
+    <h5>Prontuário Médico</h5>
+    <div class="row">
+      <div class="col">
+        <small><strong>Paciente</strong></small>
+        <div>{{ consulta?.paciente?.nome }}</div>
+      </div>
+      <div class="col">
+        <small><strong>Data da Consulta</strong></small>
+        <div>{{ consulta?.diaConsulta }} {{ consulta?.horaConsulta }}</div>
+      </div>
+      <div class="col">
+        <small><strong>Médico</strong></small>
+        <div>{{ consulta?.medico?.nome }}</div>
+      </div>
+    </div>
+  </div>
+
+  <hr />
+
+  <!-- VISUALIZAÇÃO -->
+  <div *ngIf="modoVisualizacao; else editarTemplate">
+    <div class="campo">
+      <strong>Queixa Principal:</strong>
+      <p>{{ prontuario.motivoConsulta || '—' }}</p>
+    </div>
+
+    <div class="campo">
+      <strong>Diagnóstico:</strong>
+      <p>{{ prontuario.diagnostico || '—' }}</p>
+    </div>
+
+    <div class="campo">
+      <strong>Prescrição Médica:</strong>
+      <p>{{ prontuario.receita || '—' }}</p>
+    </div>
+
+    <div class="campo">
+      <strong>Observações:</strong>
+      <p>{{ prontuario.observacao || '—' }}</p>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-3">
+      <button class="btn btn-danger" (click)="excluir()">Excluir</button>
+      <button class="btn btn-primary" (click)="editar()">Editar</button>
+      <button class="btn btn-secondary" (click)="fecharModal.emit()">Fechar</button>
+    </div>
+  </div>
+
+  <!-- CADASTRO / EDIÇÃO -->
+  <ng-template #editarTemplate>
+    <form (ngSubmit)="salvar()">
+      <div class="form-group mb-3">
+        <label>Queixa Principal</label>
+        <textarea class="form-control" rows="2" [(ngModel)]="prontuario.motivoConsulta" name="motivo"></textarea>
+      </div>
+
+      <div class="form-group mb-3">
+        <label>Diagnóstico</label>
+        <textarea class="form-control" rows="2" [(ngModel)]="prontuario.diagnostico" name="diagnostico"></textarea>
+      </div>
+
+      <div class="form-group mb-3">
+        <label>Prescrição Médica</label>
+        <textarea class="form-control" rows="3" [(ngModel)]="prontuario.receita" name="receita"></textarea>
+      </div>
+
+      <div class="form-group mb-3">
+        <label>Observações</label>
+        <textarea class="form-control" rows="2" [(ngModel)]="prontuario.observacao" name="observacao"></textarea>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-secondary" (click)="cancelar()">Cancelar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="loading">
+          {{ loading ? 'Salvando...' : (prontuario?.id ? 'Salvar Alterações' : 'Criar Prontuário') }}
+        </button>
+      </div>
+    </form>
+  </ng-template>
+</div>

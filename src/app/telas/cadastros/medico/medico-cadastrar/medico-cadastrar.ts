@@ -3,6 +3,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MedicoService } from '../medico-service';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-medico-cadastrar',
@@ -10,8 +12,14 @@ import { MedicoService } from '../medico-service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
   ],
+  providers: [
+      provideNgxMask(),
+      MessageService
+    ],
   templateUrl: './medico-cadastrar.html',
   styleUrls: ['./medico-cadastrar.css']
 })
